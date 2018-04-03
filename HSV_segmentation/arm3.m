@@ -1,6 +1,6 @@
-
+figure(1)
 fontSize = 10;
-rgbimage=imread('C:\\Users\\insungh\\Desktop\\Winter 2018\\Foundations of computer vision\\Project\\arm\\41.jpg');
+rgbimage=imread('41.jpg');
 rgbimage = imrotate(rgbimage, 270);
 [row, col, chan] = size(rgbimage);
 
@@ -53,24 +53,26 @@ BB(BB==0) = []; BBB = sum(BB(:))/size(BB,2);
 CC = maskedRgbImage(:,:,3);
 CC(CC==0) = []; CCC = sum(CC(:))/size(CC,2);
 
-realimage=imread('C:\\Users\\insungh\\Desktop\\Winter 2018\\Foundations of computer vision\\Project\\arm\\36.jpg');
-row2 = size(realimage,1); col2 = size(realimage,2);
-seg = zeros(row2, col2);
-for i = 1:row2
-    for j = 1:col2
-        if realimage(i,j,1) < 1.2*AAA && realimage(i,j,1) > 0.8*AAA ...
-               && realimage(i,j,2) < 1.2*BBB && realimage(i,j,2) > 0.8*BBB ...
-               && realimage(i,j,3) < 1.2*CCC && realimage(i,j,3) > 0.8*CCC
-           seg(i,j) = 1;
-        else
-           seg(i,j) = 0;
-        end
-    end
-end
-subplot(3,3,8);
-imshow(realimage,[]);
-subplot(3,3,9);
-imshow(seg,[]);            
+% realimage=imread('36.jpg');
+% row2 = size(realimage,1); col2 = size(realimage,2);
+% seg = zeros(row2, col2);
+% for i = 1:row2
+%     for j = 1:col2
+%         if realimage(i,j,1) < 1.2*AAA && realimage(i,j,1) > 0.8*AAA ...
+%                && realimage(i,j,2) < 1.2*BBB && realimage(i,j,2) > 0.8*BBB ...
+%                && realimage(i,j,3) < 1.2*CCC && realimage(i,j,3) > 0.8*CCC
+%            seg(i,j) = 1;
+%         else
+%            seg(i,j) = 0;
+%         end
+%     end
+% end
+% subplot(3,3,8);
+% imshow(realimage,[]);
+% subplot(3,3,9);
+% imshow(seg,[]);     
+
+
 % %IMAGE SEGMENTATION
 % img=imread('C:\\Users\\insungh\\Desktop\\Winter 2018\\Foundations of computer vision\\Project\\arm\\34.jpg');
 % img=rgb2ycbcr(img);
@@ -127,3 +129,37 @@ imshow(seg,[]);
 % imshow(handImage, []);
 % title('Hand Image', 'FontSize', 12);
 
+% subplot(3,3,10)
+% figure
+% mask_img = immultiply(maskedRgbImage,ones(size(maskedRgbImage)));
+% imshow(mask_img)
+
+%matlab kmeans clustering color segmentation example
+lab_he = rgb2lab(maskedRgbImage);
+ab = lab_he(:,:,2:3);
+nrows = size(ab,1);
+ncols = size(ab,2);
+ab = reshape(ab,nrows*ncols,2);
+
+figure(2)
+nColors = 5;
+% repeat the clustering 3 times to avoid local minima
+[cluster_idx, cluster_center] = kmeans(ab,nColors,'distance','sqEuclidean', ...
+                                      'Replicates',3);
+pixel_labels = reshape(cluster_idx,nrows,ncols);
+imshow(pixel_labels,[]), title('image labeled by cluster index');
+figure(3)
+subplot(2,3,1)
+imshow(segmented_images{1}), title('objects in cluster 1');
+
+subplot(2,3,2)
+imshow(segmented_images{2}), title('objects in cluster 2');
+
+subplot(2,3,3)
+imshow(segmented_images{3}), title('objects in cluster 3');
+
+subplot(2,3,4)
+imshow(segmented_images{4}), title('objects in cluster 4');
+
+subplot(2,3,5)
+imshow(segmented_images{5}), title('objects in cluster 5');
